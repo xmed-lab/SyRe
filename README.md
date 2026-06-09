@@ -1,4 +1,4 @@
-# SyRe: Systematic Refinement for Medical Image Segmentation
+# SyRe: Synergistic Vision-Language Reinforcement Enables Scalable On-Demand Analysis across Diverse Clinical Tasks
 
 SyRe is a multimodal model for medical image segmentation, built on a vision-language architecture (LLaVA + SAM). It supports text-guided segmentation with LoRA fine-tuning.
 
