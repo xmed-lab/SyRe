@@ -6,17 +6,3 @@
 __pycache__/
 *.py[cod]
 *.so
-
-# Local training outputs and logs
-training_logs/
-checkpoints/
-outputs/
-
-# Dataset manifests can be large and are kept outside the code repository
-data_splits/*.json
-
-# Local model/data artifacts
-*.pth
-*.pt
-*.ckpt
-*.safetensors
