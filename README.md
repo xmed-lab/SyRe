@@ -11,12 +11,6 @@
   <a href="http://143.89.46.197:7860/"><img src="https://img.shields.io/badge/Demo-SyRe-4f46e5?style=flat-square" alt="Demo"></a>
 </p>
 
-<p>
-  <a href="https://huggingface.co/McGregorW/SyRe">Weights</a> ·
-  <a href="https://huggingface.co/datasets/McGregorW/Datasets2D">Data</a> ·
-  <a href="http://143.89.46.197:7860/">Demo</a> ·
-  <a href="https://github.com/microsoft/BiomedParse">Related work</a>
-</p>
 
 </div>
 
