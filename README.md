@@ -22,27 +22,16 @@ SyRe is a text-driven segmentation foundation model for biomedical images. Given
 
 SyRe connects language understanding with SAM-style dense prediction through a closed-loop vision-language architecture:
 
-```text
-image + text prompt
-        │
-        ▼
-LLaVA-style language backbone ──► [SEG] representation
-        │                                      │
-        └────────────── SAM ViT-H ◄───────────┘
-                         │
-                         ▼
-                    binary mask
-```
 
-| Component | Role |
-| --- | --- |
-| **Vision-language backbone** | Understands the image and the requested anatomical/lesion concept. |
-| **SAM ViT-H grounding encoder** | Produces high-resolution visual features. |
-| **Text-to-mask projection** | Converts the `[SEG]` representation into mask-decoder prompts. |
-| **CRD data construction** | Adds language descriptions to image-mask pairs during training. |
-| **OTFA utilities** | Provides prototype-based one-shot adaptation hooks for new classes. |
+<p align="center">
+  <img src="figures/framework.png" alt="SyRe framework" width="100%">
+</p>
+<p align="center"><em>SyRe couples vision-language reasoning with SAM-based dense prediction for on-demand biomedical segmentation.</em></p>
 
-The accompanying study describes SyReData as a large image-mask-text collection spanning nine imaging modalities and 177 segmentation tasks. See the paper and interactive demo for the complete experimental protocol and reported results.
+
+The accompanying study describes SyReData as a large image-mask-text collection spanning nine imaging modalities and 229 segmentation tasks. See the paper and interactive demo for the complete experimental protocol and reported results.
+
+
 
 ## 📣 Latest updates
 
@@ -52,6 +41,46 @@ The accompanying study describes SyReData as a large image-mask-text collection 
 - **Interactive demo:** try SyRe at [143.89.46.197:7860](http://143.89.46.197:7860/).
 
 > The public model repository is about **16.3 GB** and the public dataset repository is about **379 GB**. Download only the files or subsets you need.
+
+## 📊 Results and visual examples
+
+### Quantitative results
+
+
+<p align="center">
+  <img src="figures/res_internal.png" alt="SyRe quantitative results on internal datasets" width="100%">
+</p>
+<p align="center"><em>Quantitative comparison on internal datasets.</em></p>
+
+
+<p align="center">
+  <img src="figures/res_external.png" alt="SyRe quantitative results on external datasets" width="100%">
+</p>
+<p align="center"><em>Quantitative comparison on external datasets.</em></p>
+
+
+<p align="center">
+  <img src="figures/res_inhouse.png" alt="SyRe quantitative results on in-house datasets" width="100%">
+</p>
+<p align="center"><em>Quantitative comparison on in-house datasets.</em></p>
+
+### Qualitative results
+
+<p align="center">
+  <img src="figures/vis_internal.png" alt="SyRe qualitative results across biomedical imaging modalities" width="100%">
+</p>
+<p align="center"><em>Representative predictions across CT, MRI, ultrasound, pathology, dermoscopy, X-ray, fundus, endoscopy, and PET images.</em></p>
+
+<p align="center">
+  <img src="figures/vis_inhouse.png" alt="SyRe qualitative results on in-house tasks" width="100%">
+</p>
+<p align="center"><em>Representative qualitative results on in-house segmentation tasks.</em></p>
+
+<p align="center">
+  <img src="figures/app_path.png" alt="SyRe pathology application" width="100%">
+</p>
+<p align="center"><em>Example pathology application showing SyRe predictions across biomedical image patches.</em></p>
+
 
 ## 🛠️ Installation & setup
 
