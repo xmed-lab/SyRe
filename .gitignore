@@ -1,0 +1,8 @@
+# macOS and IDE files
+.DS_Store
+.idea/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+*.so
