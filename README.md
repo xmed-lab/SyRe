@@ -201,12 +201,14 @@ Use `--start-index` and `--limit` to evaluate a contiguous subset of `2d_test`. 
 
 ## 🧪 Training & validation
 
-The original training entry point is `train.py`. The supplied launcher contains the authors' multi-node paths and NCCL settings; edit those values before using it on another machine.
+The original training entry point is `train.py`. The supplied launcher uses repository-relative defaults and configurable environment variables, so it can be used from the repository root without editing private machine paths. Download the model and dataset described above, place the SAM ViT-H checkpoint at `checkpoints/sam_vit_h_4b8939.pth`, and then run:
 
 ```bash
 python train.py --help
 bash scripts/finetune_2d_syre.sh
 ```
+
+The launcher defaults to `checkpoints/SyRe`, `data/SyReData`, and `output/syre_2d`. Override these locations with `SYRE_MODEL`, `SYRE_DATASET_DIR`, `SYRE_SAM_CHECKPOINT`, `SYRE_OUTPUT_DIR`, and `SYRE_TEXT_PROMPTS_PATH`. Training starts from the downloaded model by default; to continue from a local DeepSpeed checkpoint, set `SYRE_RESUME` to its repository-relative or absolute path. For distributed training, configure `GPUS_PER_NODE`, `NNODES`, `NODE_RANK`, `MASTER_ADDR`, and `MASTER_PORT` in the environment.
 
 Important arguments:
 
@@ -218,8 +220,12 @@ Important arguments:
 | `--mode`, `--mode_val` | Training and validation index suffixes. |
 | `--text_prompts_path` | Optional CRD description file for training. |
 | `--lora_r`, `--lora_alpha` | LoRA configuration. |
+| `--batch_size` | Per-process micro-batch size; the reported launcher uses `8`. |
+| `--grad_accumulation_steps` | Gradient accumulation steps; the reported launcher uses `10`. |
 | `--mask_validation` | Enable segmentation metrics during validation. |
 | `--resume` | DeepSpeed checkpoint directory. |
+
+With 40 distributed processes, the reported settings give a global training batch size of `40 × 8 × 10 = 3,200`.
 
 Merge a DeepSpeed-exported checkpoint into a Hugging Face directory with:
 

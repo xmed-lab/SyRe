@@ -1,71 +1,69 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-source /mnt/ali/fmodimg/miniconda3/etc/profile.d/conda.sh
-conda activate syre118
+# Run from the repository root, or set SYRE_ROOT explicitly.
+SYRE_ROOT="${SYRE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+cd "${SYRE_ROOT}"
 
-export NCCL_SOCKET_IFNAME=bond0      # 明确告诉 NCCL 用 bond0（IPv4）
-export NCCL_IB_GID_INDEX=0           # 强制使用 RoCE v1 / 禁止 IPv6 GID
-export NCCL_DEBUG=INFO               # 先开调试，确认生效后可关掉
-export HF_HUB_OFFLINE=1
-export TRANSFORMERS_OFFLINE=1
-#set HF_ENDPOINT=https://hf-mirror.com
-#export HF_ENDPOINT=https://hf-mirror.com
-export TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC=3600   # 例如 1 小时
+# User-configurable paths. Download the model and dataset described in README.md,
+# and place the SAM checkpoint at checkpoints/sam_vit_h_4b8939.pth.
+MODEL_PATH="${SYRE_MODEL:-./checkpoints/SyRe}"
+DATASET_DIR="${SYRE_DATASET_DIR:-./data/SyReData}"
+SAM_CHECKPOINT="${SYRE_SAM_CHECKPOINT:-./checkpoints/sam_vit_h_4b8939.pth}"
+OUTPUT_DIR="${SYRE_OUTPUT_DIR:-./output/syre_2d}"
+TEXT_PROMPTS_PATH="${SYRE_TEXT_PROMPTS_PATH:-${DATASET_DIR}/internvl_des_2d.json}"
+RESUME_DIR="${SYRE_RESUME:-}"
 
-echo "NCCL_SOCKET_IFNAME=${NCCL_SOCKET_IFNAME}"
-echo "NCCL_IB_GID_INDEX=${NCCL_IB_GID_INDEX}"
-echo "NCCL_IB_DISABLE=${NCCL_IB_DISABLE}"
-echo "NCCL_DEBUG=${NCCL_DEBUG}"
+MODE="${SYRE_MODE:-2d_train}"
+MODE_VAL="${SYRE_MODE_VAL:-2d_test}"
+GPUS_PER_NODE="${GPUS_PER_NODE:-1}"
+NNODES="${NNODES:-1}"
+NODE_RANK="${NODE_RANK:-${RANK:-0}}"
+MASTER_ADDR="${MASTER_ADDR:-127.0.0.1}"
+MASTER_PORT="${MASTER_PORT:-29500}"
 
-# export PYTHONUNBUFFERED=1
+if [[ ! -d "${DATASET_DIR}" ]]; then
+  echo "Dataset directory not found: ${DATASET_DIR}" >&2
+  exit 1
+fi
+if [[ ! -f "${SAM_CHECKPOINT}" ]]; then
+  echo "SAM checkpoint not found: ${SAM_CHECKPOINT}" >&2
+  exit 1
+fi
+if [[ ! -f "${TEXT_PROMPTS_PATH}" ]]; then
+  echo "Text prompt file not found: ${TEXT_PROMPTS_PATH}" >&2
+  exit 1
+fi
 
-#export CUDA_VISIBLE_DEVICES=0,1,2,3
-GPUS_PER_NODE=8
-# export HOSTFILE="./hostfile"
+mkdir -p "${OUTPUT_DIR}" logs
 
+TRAIN_ARGS=(
+  --version "${MODEL_PATH}"
+  --dataset_dir "${DATASET_DIR}"
+  --vision_pretrained "${SAM_CHECKPOINT}"
+  --exp_name "${OUTPUT_DIR}"
+  --lora_r 16
+  --lr 1e-4
+  --pretrained
+  --epochs 10
+  --batch_size 8
+  --grad_accumulation_steps 10
+  --mask_validation
+  --mode "${MODE}"
+  --mode_val "${MODE_VAL}"
+  --text_prompts_path "${TEXT_PROMPTS_PATH}"
+  --num_classes_per_sample 8
+)
 
-echo "[INFO] NNODES=${WORLD_SIZE} NODE_RANK=${RANK} MASTER_ADDR=${MASTER_ADDR} MASTER_PORT=${MASTER_PORT}"
-echo "[INFO] CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES} (GPUS_PER_NODE=${GPUS_PER_NODE})"
-
-# Path to the checkpoint and output directory
-export CKPT_PATH="/mnt/ali/fmodimg/SyRe_workdir/v16_final/model_bin/"
-export OUTPUT_DIR_PATH="/mnt/ali/fmodimg/SyRe_workdir/SyRe"
-
-
-mode=2d_train
-mode_val=2d_test
-text_prompts_path=/mnt/ali/fmodimg/Datasets2D/internvl_des_2d.json
-
-# =========================
-# DeepSpeed multi-node launch
-# =========================
+if [[ -n "${RESUME_DIR}" ]]; then
+  TRAIN_ARGS+=(--resume "${RESUME_DIR}")
+fi
 
 torchrun \
-  --nnodes=${WORLD_SIZE} \
-  --nproc_per_node=${GPUS_PER_NODE} \
-  --node_rank=${RANK} \
-  --master_addr=${MASTER_ADDR} \
-  --master_port=${MASTER_PORT} \
-  train.py \
-  --version $CKPT_PATH \
-  --dataset_dir /mnt/ali/fmodimg/Datasets2D/ \
-  --vision_pretrained /mnt/ali/fmodimg/SyRe/checkpoints/sam_vit_h_4b8939.pth \
-  --exp_name $OUTPUT_DIR_PATH \
-  --lora_r 16 \
-  --lr 1e-4 \
-  --pretrained \
-  --epochs 10 \
-  --batch_size 8 \
-  --mask_validation \
-  --mode $mode \
-  --mode_val $mode_val \
-  --text_prompts_path $text_prompts_path \
-  --num_classes_per_sample 8 \
-  --resume /mnt/ali/fmodimg/SyRe_workdir/SyRe/ckpt_model_last_epoch \
-  --resume_from_mid \
-  2>&1 | tee "./logs_new/train_syre_node${RANK}--contd.log"
-    #--resume /mnt/ali/fmodimg/SyRe_workdir/v16_final/ckpt_model_last_epoch \
-  #--resume_from_mid \
-
-  
+  --nnodes="${NNODES}" \
+  --nproc_per_node="${GPUS_PER_NODE}" \
+  --node_rank="${NODE_RANK}" \
+  --master_addr="${MASTER_ADDR}" \
+  --master_port="${MASTER_PORT}" \
+  train.py "${TRAIN_ARGS[@]}" \
+  2>&1 | tee "logs/train_syre_node${NODE_RANK}.log"
