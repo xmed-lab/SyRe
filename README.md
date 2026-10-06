@@ -248,14 +248,18 @@ train.py                Training and validation entry point
 
 ## 📚 Citation
 
-If you use SyRe, please cite the SyRe paper and link the released resources:
+If you use SyRe, please cite the SyRe paper:
 
-```text
-Synergistic Vision-Language Reinforcement Enables Scalable On-Demand Analysis across Diverse Clinical Tasks.
-
-Paper: https://arxiv.org/abs/2505.03380
-Model: https://huggingface.co/McGregorW/SyRe
-Data:  https://huggingface.co/datasets/McGregorW/Datasets2D
+```latex
+@misc{wang2026synergisticvisionlanguagereinforcementenables,
+      title={Synergistic Vision-Language Reinforcement Enables Scalable On-Demand Analysis across Diverse Clinical Tasks}, 
+      author={Haonan Wang and Jiaji Mao and Lehan Wang and Qixiang Zhang and Marawan Elbatel and Yi Qin and Huijun Hu and Baoxun Li and Wenhui Deng and Weifeng Qin and Hongrui Li and Jialin Liang and Jun Shen and Xiaomeng Li},
+      year={2026},
+      eprint={2505.03380},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2505.03380}, 
+}
 ```
 
 Please also follow the attribution and usage terms of the source datasets and pretrained components used in your experiments.
