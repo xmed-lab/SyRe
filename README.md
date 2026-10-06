@@ -5,7 +5,7 @@
 ### Synergistic Vision-Language Reinforcement Enables Scalable On-Demand Analysis across Diverse Clinical Tasks
 
 <p>
-  <a href="https://github.com/xmed-lab/SyRe"><img src="https://img.shields.io/badge/Code-SyRe-111827?style=flat-square&logo=github" alt="Code"></a>
+  <a href="https://arxiv.org/abs/2505.03380"><img src="https://img.shields.io/badge/arXiv-2505.03380-b31b1b?style=flat-square&logo=arxiv" alt="arXiv"></a>
   <a href="https://huggingface.co/McGregorW/SyRe"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Model-yellow?style=flat-square" alt="Model"></a>
   <a href="https://huggingface.co/datasets/McGregorW/Datasets2D"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Dataset-yellow?style=flat-square" alt="Dataset"></a>
   <a href="http://143.89.46.197:7860/"><img src="https://img.shields.io/badge/Demo-SyRe-4f46e5?style=flat-square" alt="Demo"></a>
@@ -253,7 +253,7 @@ If you use SyRe, please cite the SyRe paper and link the released resources:
 ```text
 Synergistic Vision-Language Reinforcement Enables Scalable On-Demand Analysis across Diverse Clinical Tasks.
 
-Code:  https://github.com/xmed-lab/SyRe
+Paper: https://arxiv.org/abs/2505.03380
 Model: https://huggingface.co/McGregorW/SyRe
 Data:  https://huggingface.co/datasets/McGregorW/Datasets2D
 ```
