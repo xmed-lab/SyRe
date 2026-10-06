@@ -20,7 +20,7 @@ from scripts.syre_2d_test import (
 
 
 bundle = load_model(model_id="McGregorW/SyRe", device="cuda:0", dtype="bf16")
-dataset = load_2d_test_dataset(bundle.tokenizer, "/path/to/Datasets2D", mode="2d_test")
+dataset = load_2d_test_dataset(bundle.tokenizer, "/path/to/SyReData", mode="2d_test")
 sample = torch.utils.data.Subset(dataset, [0])
 loader = make_2d_test_loader(bundle, sample)
 batch = next(iter(loader))

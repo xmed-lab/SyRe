@@ -7,7 +7,7 @@
 <p>
   <a href="https://arxiv.org/abs/2505.03380"><img src="https://img.shields.io/badge/arXiv-2505.03380-b31b1b?style=flat-square&logo=arxiv" alt="arXiv"></a>
   <a href="https://huggingface.co/McGregorW/SyRe"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Model-yellow?style=flat-square" alt="Model"></a>
-  <a href="https://huggingface.co/datasets/McGregorW/Datasets2D"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Dataset-yellow?style=flat-square" alt="Dataset"></a>
+  <a href="https://huggingface.co/datasets/McGregorW/SyReData"><img src="https://img.shields.io/badge/%F0%9F%A4%97-Dataset-yellow?style=flat-square" alt="Dataset"></a>
   <a href="http://143.89.46.197:7860/"><img src="https://img.shields.io/badge/Demo-SyRe-4f46e5?style=flat-square" alt="Demo"></a>
 </p>
 
@@ -36,7 +36,7 @@ The accompanying study describes SyReData as a large image-mask-text collection 
 ## 📣 Latest updates
 
 - **Public checkpoint:** the released SyRe weights are available on [Hugging Face](https://huggingface.co/McGregorW/SyRe).
-- **Public data:** the 2D image/mask collection is available on [Datasets2D](https://huggingface.co/datasets/McGregorW/Datasets2D).
+- **Public data:** the 2D image/mask collection is available on [SyReData](https://huggingface.co/datasets/McGregorW/SyReData).
 - **Reproducible utilities:** this repository now includes native `2d_test` inference and batch evaluation scripts.
 - **Interactive demo:** try SyRe at [143.89.46.197:7860](http://143.89.46.197:7860/).
 
@@ -131,9 +131,9 @@ python - <<'PY'
 from huggingface_hub import snapshot_download
 
 snapshot_download(
-    repo_id="McGregorW/Datasets2D",
+    repo_id="McGregorW/SyReData",
     repo_type="dataset",
-    local_dir="data/Datasets2D",
+    local_dir="data/SyReData",
     # Example: allow_patterns=["*test*", "**/*.png"]
 )
 PY
@@ -148,7 +148,7 @@ The native evaluation path follows GLaMMedv16 and reads `image2label_2d_test.jso
 ```bash
 python examples/inference.py \
   --model McGregorW/SyRe \
-  --dataset-dir data/Datasets2D \
+  --dataset-dir data/SyReData \
   --index 0 \
   --output-dir outputs/sample_000000 \
   --device cuda:0 \
@@ -166,7 +166,7 @@ from scripts.syre_2d_test import load_model, load_2d_test_dataset
 from scripts.syre_2d_test import make_2d_test_loader, predict_batch
 
 bundle = load_model("McGregorW/SyRe", device="cuda:0", dtype="bf16")
-dataset = load_2d_test_dataset(bundle.tokenizer, "data/Datasets2D", mode="2d_test")
+dataset = load_2d_test_dataset(bundle.tokenizer, "data/SyReData", mode="2d_test")
 loader = make_2d_test_loader(bundle, torch.utils.data.Subset(dataset, [0]))
 output, batch = predict_batch(bundle, next(iter(loader)))
 ```
@@ -176,7 +176,7 @@ output, batch = predict_batch(bundle, next(iter(loader)))
 ```bash
 python scripts/evaluate_syre.py \
   --model McGregorW/SyRe \
-  --dataset-dir data/Datasets2D \
+  --dataset-dir data/SyReData \
   --output-dir outputs/test \
   --device cuda:0 \
   --dtype bf16 \
