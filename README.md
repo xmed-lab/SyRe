@@ -231,20 +231,6 @@ python scripts/merge_lora_weights.py \
   --save_path /path/to/merged_syre
 ```
 
-## 🗂️ Repository structure
-
-```text
-model/                  SyRe, LLaVA-style modules, and SAM components
-dataset/                2D medical segmentation loader and collation
-scripts/inference_syre.py
-                        Native 2d_test single-sample inference
-scripts/evaluate_syre.py
-                        Native 2d_test evaluator
-scripts/syre_2d_test.py
-                        Shared GLaMM-style dataset/model/metric utilities
-examples/               CLI and Python API examples for `2d_test`
-train.py                Training and validation entry point
-```
 
 ## 📚 Citation
 
