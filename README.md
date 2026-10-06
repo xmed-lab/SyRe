@@ -2,7 +2,7 @@
 
 # SyRe
 
-### Synergistic Vision-Language Reinforcement for on-demand biomedical image segmentation
+### Synergistic Vision-Language Reinforcement Enables Scalable On-Demand Analysis across Diverse Clinical Tasks
 
 <p>
   <a href="https://github.com/xmed-lab/SyRe"><img src="https://img.shields.io/badge/Code-SyRe-111827?style=flat-square&logo=github" alt="Code"></a>
